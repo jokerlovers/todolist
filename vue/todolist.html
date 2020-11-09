@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <link rel="stylesheet" href="./reset.css">
+  <link rel="stylesheet" href="./todolist.css">
+</head>
+<body>
+  <div id="app">
+    <div class="header">
+      <div class="title">
+        <h2>ToDoList</h2>
+        <input class="search" type="text" placeholder="添加ToDo" @keyup.enter="addTodo" v-model="todoItem">
+      </div>
+    </div>
+    <div class="main">
+      <div class="doing">
+        <div class="doing-title">
+          <h2>正在进行</h2>
+          <span>{{doing}}</span>
+        </div>
+        <div class="show" v-for="(item,index) in doingList" >
+          <ul class="item">
+            <li><input @click="isdone(index)" class="checkbox" type="checkbox" :key="doing + index"></input><input type="text" v-model="doingList[index]"><span class="close" @click="deleteTodo(index)">X</span></li>             
+          </ul>
+        </div>       
+      </div>
+      <div class="done">
+        <div class="done-title">
+          <h2>已经完成</h2>
+          <span>{{done}}</span>
+        </div>
+        <div class="show isok" v-for="(item,index) in doneList" :key="index">
+          <ul class="item">
+            <li><input @click="nodone(index)" class="checkbox" type="checkbox" checked :key="done + index" ></input><input type="text" v-model="doneList[index]"><span class="close" @click="deleteDnoe(index)">X</span></li>             
+          </ul>
+        </div>  
+      </div>
+    </div>
+    
+  </div>
+
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        doing:0,
+        done:0,
+        doingList:[],
+        doneList:[],
+        todoItem:'',
+        nochecked:false,
+        ischecked:true
+      },
+      methods: {
+        // 删除正在进行
+        deleteTodo(index) {
+          this.doingList.splice(index,1)
+          this.updateCount()
+          this.updateData()
+        },
+        // 添加todo
+        addTodo() {
+          this.doingList.push(this.todoItem)
+          this.updateCount()
+          this.updateData()
+          this.todoItem = ""
+        },
+        // 是否完成
+        isdone(index) {
+          let item = this.doingList[index]
+          this.doneList.push(item)
+          this.deleteTodo(index)
+          this.updateCount()
+          this.updateData()        
+        },
+        // 没有完成
+        nodone(index) {
+          let item = this.doneList[index]
+          this.doingList.push(item)
+          this.doneList.splice(index,1)
+          this.updateCount()
+          this.updateData()
+        },
+        // 删除已完成
+        deleteDnoe(index){
+          let item = this.doneList[index]
+          this.doneList.splice(index,1)
+          this.updateCount()
+          this.updateData()
+        },
+        // 更新数据
+        updateCount() {
+          this.doing = this.doingList.length
+          this.done = this.doneList.length
+        },
+        updateData() {
+          localStorage.setItem('doing',this.doingList)
+          localStorage.setItem('done',this.doneList)
+          // console.log(localStorage);
+          // console.log(localStorage.doing);
+        },      
+       
+        clear() {
+          localStorage.clear()
+        }
+    },
+    created() {
+          if (localStorage.doing) {
+            console.log(new Array(localStorage.doing));
+            this.doingList = new Array(localStorage.doing)
+          }
+          if(localStorage.done) {
+            console.log(localStorage.done);
+            this.doneList = new Array(localStorage.done)
+          }
+          this.updateCount()
+        },
+    })
+  </script>
+</body>
+</html>
