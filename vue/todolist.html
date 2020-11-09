@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>todolist</title>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <link rel="stylesheet" href="./reset.css">
   <link rel="stylesheet" href="./todolist.css">
@@ -12,8 +12,8 @@
   <div id="app">
     <div class="header">
       <div class="title">
-        <h2>ToDoList</h2>
-        <input class="search" type="text" placeholder="添加ToDo" @keyup.enter="addTodo" v-model="todoItem">
+        <h2 @click="change">ToDoList</h2>
+        <input ref="todoItem" class="search" type="text" placeholder="添加ToDo" @keyup.enter="addTodo" v-model="todoItem">
       </div>
     </div>
     <div class="main">
@@ -53,7 +53,8 @@
         doneList:[],
         todoItem:'',
         nochecked:false,
-        ischecked:true
+        ischecked:true,
+        isonbluer:false
       },
       methods: {
         // 删除正在进行
@@ -64,10 +65,12 @@
         },
         // 添加todo
         addTodo() {
-          this.doingList.push(this.todoItem)
-          this.updateCount()
-          this.updateData()
-          this.todoItem = ""
+          if (this.todoItem != '') {
+            this.doingList.push(this.todoItem)
+            this.updateCount()
+            this.updateData()
+            this.todoItem = ""
+          }      
         },
         // 是否完成
         isdone(index) {
@@ -103,9 +106,8 @@
           // console.log(localStorage);
           // console.log(localStorage.doing);
         },      
-       
-        clear() {
-          localStorage.clear()
+        change() {
+          this.$refs.todoItem.focus()
         }
     },
     created() {
