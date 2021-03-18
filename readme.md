@@ -1,4 +1,3 @@
-由于本人还未学习过react，typescript和单元测试，所以使用vue来进行设计
 
 样式仿照这个写的 http://www.todolist.cn/
 
